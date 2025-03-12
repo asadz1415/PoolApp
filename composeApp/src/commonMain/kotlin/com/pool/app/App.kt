@@ -1,37 +1,39 @@
 package com.pool.app
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.painterResource
+import androidx.compose.runtime.Composable
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.pool.app.mainScreens.CreatePoolScreenFlow
+import com.pool.app.mainScreens.DashboardScreen
+import com.pool.app.mainScreens.PoolListingScreenFlow
+import com.pool.app.navigationControler.Screen
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
-import poolapp.composeapp.generated.resources.Res
-import poolapp.composeapp.generated.resources.compose_multiplatform
 
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
-                }
+    val navController = rememberNavController()
+    var startPoint = Screen.DashboardScreen.route
+
+    NavHost(navController = navController, startDestination = startPoint) {
+        composable(route = Screen.DashboardScreen.route) { backStackEntry ->
+            DashboardScreen() {
+                navController.navigate(it)
             }
         }
+
+        composable(route = Screen.CreatePoolScreenFlow.route) { backStackEntry ->
+            CreatePoolScreenFlow() {
+                navController.navigate(it)
+            }
+        }
+
+        composable(route = Screen.PoolListingScreenFlow.route) { backStackEntry ->
+            PoolListingScreenFlow() {
+                navController.navigate(it)
+            }
+        }
+
     }
 }
